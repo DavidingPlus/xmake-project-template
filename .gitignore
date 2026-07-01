@@ -2,6 +2,7 @@
 build/
 .xmake/
 .buildme
+.agents/
 
 # Makefile Build Artifacts
 *.o
