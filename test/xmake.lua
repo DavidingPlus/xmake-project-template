@@ -2,18 +2,29 @@ if not get_config("with_gtest") then
     return
 end
 
-target("gtest-xmake-project")
-    set_default(false)
-    set_kind("binary")
-    set_targetdir("$(builddir)/test")
-    add_files("*.cpp")
-    add_deps("xmake-project")
-    add_packages("gtest")
-    apply_current_platform_target_config()
-target_end()
+add_requires("gtest")
 
+-- 请用 xmake test 执行测试。
 target("tests")
     set_default(false)
-    set_kind("phony")
-    add_deps("gtest-xmake-project")
+
+    set_kind("binary")
+    set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)/test")
+    add_deps("xmake-project")
+    add_packages("gtest")
+
+    on_install(function () end)
+    apply_current_platform_target_config()
+
+    add_files("main.cpp")
+
+    add_tests("xmake-project", {
+        realtime_output = true,
+        files = {"xmake-project/*.cpp"}
+    })
+
+    add_tests("testrun", {
+        realtime_output = true,
+        files = {"testrun/*.cpp"}
+    })
 target_end()

@@ -10,6 +10,10 @@ for _, dir in ipairs (dirs) do
         -- Add subdirectory as a sub-project in xmake
         set_targetdir ("$(builddir)/$(plat)/$(arch)/$(mode)/snippet/")
 
+        -- 空的 on_install(function () end)，他们会被 xmake 编译和链接，但 xmake install 不会安装它们。
+        on_install(function () end)
+        apply_current_platform_target_config()
+
         includes (dir)
     
     end

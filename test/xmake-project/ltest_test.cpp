@@ -4,6 +4,7 @@
 
 #include "ltest.h"
 
+
 TEST(TestClassTest, Test1)
 {
     EXPECT_EQ(LTest::foo(), std::string("hello world"));

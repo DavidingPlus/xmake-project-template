@@ -6,17 +6,11 @@ local package_version = "0.0.0"
 
 set_xmakever("3.0.9")
 set_project("XMake Project")
-set_description("A C/C++ project template powered by xmake.")
+set_description("A C/C++ Project Template Powered By Xmake.")
 set_languages("cxx17")
 set_version(package_version)
 add_rules("mode.debug", "mode.release")
 
-
-option("package_version")
-    set_default("0.0.0")
-    set_showmenu(true)
-    set_description("Set the package version written to build/.version.")
-option_end()
 
 option("with_gtest")
     set_default(false)
@@ -27,7 +21,7 @@ option_end()
 option("install_in_place")
     set_default(true)
     set_showmenu(true)
-    set_description("Install to $(builddir)/install by default.")
+    set_description("Install to $(builddir)/$(plat)/$(arch)/$(mode)/install by default.")
 option_end()
 
 option("build_shared")
@@ -45,8 +39,15 @@ if build_shared == nil then
     build_shared = default_build_shared_for_current_platform()
 end
 
-if get_config("with_gtest") then
-    add_requires("gtest")
+local install_in_place = get_config("install_in_place")
+
+if install_in_place == nil then
+    install_in_place = true
+end
+
+if install_in_place then
+    -- 请用 xmake install 安装。
+    set_installdir("$(builddir)/$(plat)/$(arch)/$(mode)/install")
 end
 
 target("xmake-project")
@@ -57,7 +58,8 @@ target("xmake-project")
 
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)/lib/")
 
-    add_files("src/*.cpp")
+    -- 会将 src 根目录和所有子目录一起匹配。
+    add_files("src/**.cpp")
     add_public_headers()
     add_includedirs("src", {public = true})
     add_installfiles("$(builddir)/$(plat)/$(arch)/$(mode)/.version")
@@ -76,4 +78,6 @@ target_end()
 
 includes("snippet")
 
-includes("test")
+if get_config("with_gtest") then
+    includes("test")
+end
