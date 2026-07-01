@@ -58,7 +58,7 @@ target("xmake-project")
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)/lib/")
 
     add_files("src/*.cpp")
-    add_headerfiles(get_public_headers())
+    add_public_headers()
     add_includedirs("src", {public = true})
     add_installfiles("$(builddir)/$(plat)/$(arch)/$(mode)/.version")
 
