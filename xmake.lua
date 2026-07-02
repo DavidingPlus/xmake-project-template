@@ -69,6 +69,8 @@ target("xmake-project")
     end)
 
     before_install(function (target)
+        os.tryrm(target:installdir())
+
         io.writefile(path.join(path.directory(target:targetdir()), ".version"), package_version)
     end)
 
