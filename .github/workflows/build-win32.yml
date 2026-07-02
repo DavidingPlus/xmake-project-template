@@ -33,6 +33,7 @@ jobs:
       run: xmake install
 
     - name: Upload artifacts
+      working-directory: ${{github.workspace}}
       uses: actions/upload-artifact@v4
       with:
         name: install

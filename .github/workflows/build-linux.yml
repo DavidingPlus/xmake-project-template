@@ -34,9 +34,10 @@ jobs:
       run: xmake install
 
     - name: Upload artifacts
+      working-directory: ${{github.workspace}}
       uses: actions/upload-artifact@v4
       with:
         name: install
-        path: build/linux/x64/release/install
+        path: build/linux/x86_64/release/install
         include-hidden-files: true
         if-no-files-found: error
