@@ -1,14 +1,15 @@
 includes("config.lua")
 
 
-local package_version = "0.0.0"
+local version = "1.0.0"
 
+set_version(version)
 
 set_xmakever("3.0.9")
 set_project("XMake Project")
 set_description("A C/C++ Project Template Powered By Xmake.")
 set_languages("cxx17")
-set_version(package_version)
+
 add_rules("mode.debug", "mode.release")
 
 
@@ -65,13 +66,13 @@ target("xmake-project")
     add_installfiles("$(builddir)/$(plat)/$(arch)/$(mode)/.version")
 
     before_build(function (target)
-        io.writefile(path.join(path.directory(target:targetdir()), ".version"), package_version)
+        io.writefile(path.join(path.directory(target:targetdir()), ".version"), version)
     end)
 
     before_install(function (target)
         os.tryrm(target:installdir())
 
-        io.writefile(path.join(path.directory(target:targetdir()), ".version"), package_version)
+        io.writefile(path.join(path.directory(target:targetdir()), ".version"), version)
     end)
 
     apply_current_platform_target_config()
