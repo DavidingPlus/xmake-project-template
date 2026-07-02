@@ -22,7 +22,7 @@ jobs:
 
     - name: Configure XMake
       working-directory: ${{github.workspace}}
-      run: xmake f -m release
+      run: xmake f -m release --build_shared=true
 
     - name: Build Targets
       working-directory: ${{github.workspace}}
