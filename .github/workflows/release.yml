@@ -51,11 +51,17 @@ jobs:
       working-directory: ${{github.workspace}}
       run: xmake package
 
-    - name: Setup Tree
-      run: npm install -g tree-cli
+    - name: Install Rust
+      uses: dtolnay/rust-toolchain@stable
+
+    - name: Install eza
+      run: |
+        cargo install eza
+        echo "$HOME/.cargo/bin" >> $GITHUB_PATH
 
     - name: Display Generated Packages
-      run: tree -L 2 -C build/packages/
+      working-directory: ${{github.workspace}}
+      run: eza --tree --all build/packages/
 
     # 将 xmake package 生成的目录转换为独立二进制包。
     - name: Archive Packages
