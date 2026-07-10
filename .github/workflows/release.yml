@@ -140,7 +140,7 @@ jobs:
       shell: bash
       run: |
         tar czf \
-        xmake-project-${{ github.ref_name }}.tar.gz \
+        assets/xmake-project-${{ github.ref_name }}.tar.gz \
         -C assets x
 
     - name: Display Release Assets
