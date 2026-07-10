@@ -55,7 +55,7 @@ jobs:
       run: npm install -g tree-cli
 
     - name: Display Generated Packages
-      run: tree build/packages/
+      run: tree -L 2 -C build/packages/
 
     # 将 xmake package 生成的目录转换为独立二进制包。
     - name: Archive Packages
