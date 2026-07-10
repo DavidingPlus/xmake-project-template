@@ -1,5 +1,5 @@
 # Template: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-name: Build On Linux
+name: Build On Multiple Platform
 
 on:
   workflow_dispatch:
@@ -13,11 +13,23 @@ jobs:
   build:
     strategy:
       matrix:
-        arch:
-          - x86_64
-          - arm64
+        include:
+          - os: windows
+            arch: x64
+            xmake-arch: x86_64
+            runs-on: windows-latest
 
-    runs-on: ${{ 'x86_64' == matrix.arch && 'ubuntu-latest' || 'ubuntu-24.04-arm' }}
+          - os: ubuntu
+            arch: x86_64
+            xmake-arch: x86_64
+            runs-on: ubuntu-latest
+
+          - os: ubuntu
+            arch: arm64
+            xmake-arch: arm64
+            runs-on: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runs-on }}
 
     steps:
     - uses: actions/checkout@v4
@@ -28,8 +40,7 @@ jobs:
         xmake-version: latest
 
     - name: Configure XMake
-      working-directory: ${{github.workspace}}
-      run: xmake f -m release
+      run: xmake f -m release -a ${{ matrix.arch }}
 
     - name: Build Targets
       working-directory: ${{github.workspace}}
@@ -42,7 +53,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: install-${{ matrix.arch }}
-        path: build/linux/${{ matrix.arch }}/release/install
+        name: install-${{ matrix.os }}-${{ matrix.xmake-arch }}
+        path: build/${{ matrix.os }}/${{ matrix.arch }}/release/install
         include-hidden-files: true
         if-no-files-found: error

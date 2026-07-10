@@ -1,4 +1,4 @@
-name: Unit Test On Linux
+name: Unit Test On Multiple Platform
 
 on:
   workflow_dispatch:
@@ -12,11 +12,23 @@ jobs:
   unit-test:
     strategy:
       matrix:
-        arch:
-          - x86_64
-          - arm64
+        include:
+          - os: windows
+            arch: x64
+            xmake-arch: x86_64
+            runs-on: windows-latest
 
-    runs-on: ${{ 'x86_64' == matrix.arch && 'ubuntu-latest' || 'ubuntu-24.04-arm' }}
+          - os: ubuntu
+            arch: x86_64
+            xmake-arch: x86_64
+            runs-on: ubuntu-latest
+
+          - os: ubuntu
+            arch: arm64
+            xmake-arch: arm64
+            runs-on: ubuntu-24.04-arm
+
+    runs-on: ${{ matrix.runs-on }}
 
     steps:
     - uses: actions/checkout@v4
