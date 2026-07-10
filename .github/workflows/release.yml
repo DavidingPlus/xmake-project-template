@@ -136,8 +136,15 @@ jobs:
         path: assets
         merge-multiple: true
 
+    - name: Archive XMake Package
+      shell: bash
+      run: |
+        tar czf \
+        xmake-project-${{ github.ref_name }}.tar.gz \
+        -C assets x
+
     - name: Display Release Assets
-      run: tree assets
+      run: tree assets -a
 
     # - name: Create Release
     #   uses: softprops/action-gh-release@v2
