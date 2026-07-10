@@ -47,9 +47,7 @@ jobs:
       working-directory: ${{github.workspace}}
       run: xmake build
 
-    # 使用 xmake 原生 package 机制生成二进制包。xmake package 生成的不是源码包，而是已经编译完成的二进制包。
-    # 示例：
-    #
+    # 使用 xmake 原生 package 机制生成编译完成的二进制包。
     # build/packages/
     # └── x
     #     └── xmake-project
@@ -59,35 +57,11 @@ jobs:
     #                     ├── include/
     #                     ├── lib/
     #                     └── bin/
-    #
-    # 该结构适合：
-    #   1. xmake 包管理系统直接使用。
-    #   2. 作为 xmake-repo 二进制包仓库的数据源。
-    #   3. 同时管理多个平台、架构的预编译包。
     - name: Generate Packages
       working-directory: ${{github.workspace}}
       run: xmake package
 
-    # 上传 xmake package 原始二进制包。这里保存的是 xmake 管理格式的二进制包集合。
-    # 不同 matrix 任务产生的内容最终可以合并为：
-    #
-    # packages/
-    # └── x
-    #     └── xmake-project
-    #         ├── linux/x86_64/release
-    #         ├── linux/arm64/release
-    #         └── windows/x64/release
-    #
-    # xmake 可以根据当前环境自动选择匹配的平台和架构。
-    - name: Upload XMake Package Directory
-      uses: actions/upload-artifact@v4
-      with:
-        name: xmake-packages-${{ matrix.plat }}-${{ matrix.xmake-arch }}
-        path: build/packages/
-        include-hidden-files: true
-        if-no-files-found: error
-
-    # 将 xmake package 二进制包转换为独立发布包。这里并不是重新编译，也不是生成另一种类型的包。它只是将 xmake package 中指定平台和架构的二进制内容提取出来，去除 xmake 的目录管理层。
+    # 将 xmake package 生成的二进制包转换为适用于不同平台的独立发布包，去除 xmake 的目录管理层。
     #
     # 原始结构：
     #
@@ -105,10 +79,6 @@ jobs:
     # ├── include/
     # ├── lib/
     # └── bin/
-    #
-    # 两者都是二进制包：
-    #   1. xmake package: 面向 xmake 包管理，保留平台/架构信息。
-    #   2. platform package: 面向 GitHub Release 和普通用户下载，结构更加简单。
     - name: Archive Platform Package
       shell: bash
       run: |
@@ -119,7 +89,7 @@ jobs:
     - name: Upload Platform Package
       uses: actions/upload-artifact@v4
       with:
-        name: platform-package-${{ matrix.plat }}-${{ matrix.xmake-arch }}
+        name: xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}
         path: "*.tar.gz"
         include-hidden-files: true
         if-no-files-found: error
@@ -132,18 +102,11 @@ jobs:
       contents: write
 
     steps:
-    - name: Download All Packages
+    - name: Download Packages
       uses: actions/download-artifact@v4
       with:
         path: assets
         merge-multiple: true
-
-    - name: Archive XMake Package
-      shell: bash
-      run: |
-        tar czf \
-        assets/xmake-project-${{ github.ref_name }}.tar.gz \
-        -C assets x
 
     - name: Display Release Assets
       run: tree assets -a
