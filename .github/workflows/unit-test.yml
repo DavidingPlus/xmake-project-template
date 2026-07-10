@@ -1,4 +1,5 @@
-name: Unit Test On Multiple Platform
+# Unit Test On Multiple Platform
+name: Unit Test
 
 on:
   workflow_dispatch:
@@ -15,16 +16,19 @@ jobs:
         include:
           - os: windows
             arch: x64
+            xmake-plat: windows
             xmake-arch: x86_64
             runs-on: windows-latest
 
           - os: ubuntu
             arch: x86_64
+            xmake-plat: linux
             xmake-arch: x86_64
             runs-on: ubuntu-latest
 
           - os: ubuntu
             arch: arm64
+            xmake-plat: linux
             xmake-arch: arm64
             runs-on: ubuntu-24.04-arm
 
