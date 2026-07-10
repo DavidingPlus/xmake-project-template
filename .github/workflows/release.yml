@@ -84,6 +84,7 @@ jobs:
       with:
         name: xmake-packages-${{ matrix.plat }}-${{ matrix.xmake-arch }}
         path: build/packages/
+        include-hidden-files: true
         if-no-files-found: error
 
     # 将 xmake package 二进制包转换为独立发布包。这里并不是重新编译，也不是生成另一种类型的包。它只是将 xmake package 中指定平台和架构的二进制内容提取出来，去除 xmake 的目录管理层。
@@ -120,6 +121,7 @@ jobs:
       with:
         name: platform-package-${{ matrix.plat }}-${{ matrix.xmake-arch }}
         path: "*.tar.gz"
+        include-hidden-files: true
         if-no-files-found: error
 
   release:

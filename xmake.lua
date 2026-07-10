@@ -86,6 +86,7 @@ target("xmake-project")
         os.mkdir(target:packagedir())
 
         os.cp("$(builddir)/$(plat)/$(arch)/$(mode)/.version", target:packagedir())
+        os.cp("$(builddir)/$(plat)/$(arch)/$(mode)/.version", path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/.version"))
         os.cp("$(builddir)/config/config.h", path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/config/config.h"))
     end)
 
