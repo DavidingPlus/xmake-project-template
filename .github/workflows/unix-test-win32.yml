@@ -10,6 +10,11 @@ on:
 
 jobs:
   unit-test:
+    strategy:
+      matrix:
+        arch:
+          - x86_64
+
     runs-on: windows-latest
 
     steps:

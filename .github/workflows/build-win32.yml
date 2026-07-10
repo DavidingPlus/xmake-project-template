@@ -10,6 +10,11 @@ on:
 
 jobs:
   build:
+    strategy:
+      matrix:
+        arch:
+          - x86_64
+
     runs-on: windows-latest
 
     steps:
@@ -35,7 +40,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: install
-        path: build/windows/x64/release/install
+        name: install-${{ matrix.arch }}
+        path: build/windows/${{ matrix.arch }}/release/install
         include-hidden-files: true
         if-no-files-found: error
