@@ -51,8 +51,10 @@ jobs:
       working-directory: ${{github.workspace}}
       run: xmake package
 
+    - name: Setup Tree
+      run: npm install -g tree-cli
+
     - name: Display Generated Packages
-      shell: bash
       run: tree build/packages/
 
     # 将 xmake package 生成的目录转换为独立二进制包。
