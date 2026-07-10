@@ -58,6 +58,9 @@ end
 
 target("xmake-project")
     set_kind(build_shared and "shared" or "static")
+
+    apply_current_platform_target_config()
+
     if build_shared and is_current_win32() then
         add_rules("utils.symbols.export_all")
     end
@@ -89,8 +92,6 @@ target("xmake-project")
         os.cp("$(builddir)/$(plat)/$(arch)/$(mode)/.version", path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/.version"))
         os.cp("$(builddir)/config/config.h", path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/config/config.h"))
     end)
-
-    apply_current_platform_target_config()
 target_end()
 
 
