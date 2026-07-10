@@ -89,6 +89,10 @@ target("xmake-project")
         os.cp("$(builddir)/config/config.h", path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/config/config.h"))
     end)
 
+    after_package(function (target)
+        os.cp("packages/xmake.lua", target:packagedir())
+    end)
+
     apply_current_platform_target_config()
 target_end()
 

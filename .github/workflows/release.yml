@@ -14,19 +14,19 @@ jobs:
         include:
           - os: windows
             arch: x86_64
-            xmake-plat: windows
+            plat: windows
             xmake-arch: x64
             runs-on: windows-latest
 
           - os: ubuntu
             arch: x86_64
-            xmake-plat: linux
+            plat: linux
             xmake-arch: x86_64
             runs-on: ubuntu-latest
 
           - os: ubuntu
             arch: arm64
-            xmake-plat: linux
+            plat: linux
             xmake-arch: arm64
             runs-on: ubuntu-24.04-arm
 
@@ -41,7 +41,7 @@ jobs:
         xmake-version: latest
 
     - name: Configure XMake
-      run: xmake f -m release -p ${{ matrix.xmake-plat }} -a ${{ matrix.xmake-arch }}
+      run: xmake f -m release -p ${{ matrix.plat }} -a ${{ matrix.xmake-arch }}
 
     - name: Build Targets
       working-directory: ${{github.workspace}}
@@ -51,12 +51,29 @@ jobs:
       working-directory: ${{github.workspace}}
       run: xmake package
 
-    - name: Upload Package Repository
+    - name: Display Generated Packages
+      shell: bash
+      run: tree build/packages/
+
+    # 将 xmake package 生成的目录转换为独立二进制包。
+    - name: Archive Packages
+      shell: bash
+      run: |
+        tar czf \
+        xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}.tar.gz \
+        -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }}/release .
+
+    - name: Display Archived Packages
+      shell: bash
+      run: |
+        tar tf \
+        xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}.tar.gz
+
+    - name: Upload Package Artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: package-${{ matrix.os }}-${{ matrix.arch }}
-        path: build/packages/
-        include-hidden-files: true
+        name: package-${{ matrix.plat }}-${{ matrix.xmake-arch }}
+        path: "*.tar.gz"
         if-no-files-found: error
 
   release:
@@ -67,24 +84,17 @@ jobs:
       contents: write
 
     steps:
-    - name: Download Package Repository
+
+    - name: Download Packages
       uses: actions/download-artifact@v4
       with:
-        path: packages/
+        path: assets
         merge-multiple: true
 
-    - name: Display Package Repository
-      run: tree packages
+    - name: Display Release Assets
+      run: tree assets
 
-    # - name: Archive Package Repository
-    #   uses: a7ul/tar-action@v1.1.0
-    #   with:
-    #     command: c
-    #     files: |
-    #       packages
-    #     outPath: xmake-binary-repository.tar.gz
-
-    # - name: Create GitHub Release
+    # - name: Create Release
     #   uses: softprops/action-gh-release@v2
     #   with:
-    #     files: xmake-binary-repository.tar.gz
+    #     files: assets/*.tar.gz
