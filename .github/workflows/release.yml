@@ -111,7 +111,7 @@ jobs:
     - name: Display Release Assets
       run: tree assets -a
 
-    # - name: Create Release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     files: assets/*.tar.gz
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: assets/*.tar.gz
