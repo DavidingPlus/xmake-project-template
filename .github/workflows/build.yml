@@ -16,9 +16,9 @@ jobs:
       matrix:
         include:
           - os: windows
-            arch: x64
+            arch: x86_64
             xmake-plat: windows
-            xmake-arch: x86_64
+            xmake-arch: x64
             runs-on: windows-latest
 
           - os: ubuntu
@@ -44,7 +44,7 @@ jobs:
         xmake-version: latest
 
     - name: Configure XMake
-      run: xmake f -m release -a ${{ matrix.arch }}
+      run: xmake f -m release -p ${{ matrix.xmake_plat }} -a ${{ matrix.xmake-arch }}
 
     - name: Build Targets
       working-directory: ${{github.workspace}}
@@ -57,7 +57,7 @@ jobs:
     - name: Upload artifacts
       uses: actions/upload-artifact@v4
       with:
-        name: install-${{ matrix.os }}-${{ matrix.xmake-arch }}
-        path: build/${{ matrix.xmake-plat }}/${{ matrix.arch }}/release/install
+        name: install-${{ matrix.os }}-${{ matrix.arch }}
+        path: build/${{ matrix.xmake-plat }}/${{ matrix.xmake-arch }}/release/install
         include-hidden-files: true
         if-no-files-found: error
