@@ -1,12 +1,9 @@
-# Template: https://github.com/actions/starter-workflows/blob/main/ci/cmake-multi-platform.yml
-# Build On Multiple Platform
-name: Build
+# Release On Multiple Platform
+name: Release
 
 on:
   workflow_dispatch:
   push:
-    branches:
-      - master
     tags:
       - "v*"
 
@@ -50,14 +47,44 @@ jobs:
       working-directory: ${{github.workspace}}
       run: xmake build
 
-    - name: Install Targets
+    - name: Generate Packages
       working-directory: ${{github.workspace}}
-      run: xmake install
+      run: xmake package
 
-    - name: Upload artifacts
+    - name: Upload Package Repository
       uses: actions/upload-artifact@v4
       with:
-        name: install-${{ matrix.os }}-${{ matrix.arch }}
-        path: build/${{ matrix.xmake-plat }}/${{ matrix.xmake-arch }}/release/install/
+        name: package-${{ matrix.os }}-${{ matrix.arch }}
+        path: build/packages/
         include-hidden-files: true
         if-no-files-found: error
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+    - name: Download Package Repository
+      uses: actions/download-artifact@v4
+      with:
+        path: packages/
+        merge-multiple: true
+
+    - name: Display Package Repository
+      run: tree packages
+
+    # - name: Archive Package Repository
+    #   uses: a7ul/tar-action@v1.1.0
+    #   with:
+    #     command: c
+    #     files: |
+    #       packages
+    #     outPath: xmake-binary-repository.tar.gz
+
+    # - name: Create GitHub Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: xmake-binary-repository.tar.gz

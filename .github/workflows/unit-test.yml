@@ -44,7 +44,7 @@ jobs:
 
     - name: Configure XMake
       working-directory: ${{github.workspace}}
-      run: xmake f -m release -p ${{ matrix.xmake_plat }} -a ${{ matrix.arch }} --with_gtest=yes -y
+      run: xmake f -m release -p ${{ matrix.xmake-plat }} -a ${{ matrix.arch }} --with_gtest=yes -y
 
     - name: Build Targets
       working-directory: ${{github.workspace}}
