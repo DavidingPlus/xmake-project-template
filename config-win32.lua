@@ -14,13 +14,14 @@ function apply_win32_target_config()
     add_cxflags("/utf-8")
     set_symbols("debug", "embed")
 
-    if get_config("runtimes") == nil then
-        if is_mode("debug") then
-            set_runtimes("MDd")
-        elseif is_mode("release") then
-            set_runtimes("MD")
-        end
-    end
+    -- XMake 默认也是这样设置的。
+    -- if get_config("runtimes") == nil then
+    --     if is_mode("debug") then
+    --         set_runtimes("MDd")
+    --     elseif is_mode("release") then
+    --         set_runtimes("MD")
+    --     end
+    -- end
 
     if get_config("suppress_w3_warnings") ~= false then
         add_cxflags("/W2")
