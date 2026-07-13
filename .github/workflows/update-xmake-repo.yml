@@ -1,10 +1,10 @@
 name: Update xmake-repo
 
 on:
-  workflow_dispatch:
   release:
     types:
       - published
+      - edited
 
 jobs:
   notify:
