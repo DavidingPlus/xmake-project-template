@@ -101,8 +101,6 @@ jobs:
     - name: Archive Platform Packages
       shell: bash
       run: |
-        tree build/packages/x/xmake-project
-
         tar czf \
         xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}.tar.gz \
         -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }} .
@@ -132,7 +130,7 @@ jobs:
     - name: Display Release Assets
       run: tree assets -a
 
-    # - name: Create Release
-    #   uses: softprops/action-gh-release@v2
-    #   with:
-    #     files: assets/*.tar.gz
+    - name: Create Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: assets/*.tar.gz
