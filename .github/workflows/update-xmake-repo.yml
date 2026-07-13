@@ -1,10 +1,12 @@
 name: Update xmake-repo
 
+env:
+  PACKAGE_NAME: xmake-project
+
 on:
   release:
     types:
       - published
-      - edited
 
 jobs:
   notify:
@@ -19,7 +21,7 @@ jobs:
         event-type: update-package
         client-payload: |
           {
-            "package": "xmake-project",
+            "package": "${{ env.PACKAGE_NAME }}",
             "repo": "${{ github.repository }}",
             "version": "${{ github.event.release.tag_name }}"
           }

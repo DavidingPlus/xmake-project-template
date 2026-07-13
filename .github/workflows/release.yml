@@ -1,6 +1,9 @@
 # Release On Multiple Platform
 name: Release
 
+env:
+  PACKAGE_NAME: xmake-project
+
 on:
   workflow_dispatch:
   push:
@@ -97,7 +100,7 @@ jobs:
             suffix="-${{ matrix.runtime }}"
         fi
 
-        echo "archive-name=xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}${suffix}.tar.gz" >> $GITHUB_ENV
+        echo "ARCHIVE_NAME=${{ env.PACKAGE_NAME }}-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}${suffix}.tar.gz" >> $GITHUB_ENV
 
     # 将 xmake package 生成的二进制包转换为适用于不同平台的独立发布包，去除 xmake 的目录管理层。
     # 构建模式（debug/release）主要影响优化级别和调试信息，并不是二进制兼容性的唯一依据。Windows 下 MSVC Runtime（/MD、/MDd）会影响 CRT 链接方式，与用户工程的 ABI 兼容性直接相关，因此发布包根据 runtime 区分。
@@ -143,14 +146,16 @@ jobs:
       working-directory: ${{github.workspace}}
       shell: bash
       run: |
+        group=$(echo "${{ env.PACKAGE_NAME }}" | cut -c1)
+
         tar czf \
-        ${{ env.archive-name }} \
-        -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }}/release .
+        ${{ env.ARCHIVE_NAME }} \
+        -C build/packages/${group}/${{ env.PACKAGE_NAME }}/${{ matrix.plat }}/${{ matrix.xmake-arch }}/release .
 
     - name: Upload Platform Packages
       uses: actions/upload-artifact@v4
       with:
-        name: ${{ env.archive-name }}
+        name: ${{ env.ARCHIVE_NAME }}
         path: "*.tar.gz"
         include-hidden-files: true
         if-no-files-found: error
