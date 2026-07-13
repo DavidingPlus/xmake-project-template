@@ -40,14 +40,7 @@ jobs:
       with:
         xmake-version: latest
 
-    - name: Configure XMake
-      run: xmake f -m release -p ${{ matrix.plat }} -a ${{ matrix.xmake-arch }}
-
-    - name: Build Targets
-      working-directory: ${{github.workspace}}
-      run: xmake build
-
-    # 使用 xmake 原生 package 机制生成编译完成的二进制包。
+    # 生成 Debug 和 Release 包，使用 xmake 原生 package 机制生成编译完成的二进制包。
     # build/packages/
     # └── x
     #     └── xmake-project
@@ -59,15 +52,34 @@ jobs:
     #                     └── bin/
     - name: Generate Packages
       working-directory: ${{github.workspace}}
-      run: xmake package
+      shell: bash
+      run: |
+        for mode in debug release
+        do
+          echo "Building ${mode} package..."
 
-    # 将 xmake package 生成的二进制包转换为适用于不同平台的独立发布包，去除 xmake 的目录管理层。
-    #
+          xmake f \
+            -m ${mode} \
+            -p ${{ matrix.plat }} \
+            -a ${{ matrix.xmake-arch }} \
+            -y
+
+          xmake build
+
+          xmake package
+        done
+
+    # 使用 xmake package 生成的 Debug/Release 二进制包合并为一个平台包。
     # 原始结构：
     #
     # xmake-project/
     # └── linux/
     #     └── x86_64/
+    #         ├── debug/
+    #         │   ├── include/
+    #         │   ├── lib/
+    #         │   └── bin/
+    #         │
     #         └── release/
     #             ├── include/
     #             ├── lib/
@@ -76,15 +88,24 @@ jobs:
     # 转换后：
     #
     # xmake-project-linux-x86_64.tar.gz
-    # ├── include/
-    # ├── lib/
-    # └── bin/
+    # ├── debug/
+    # │   ├── include/
+    # │   ├── lib/
+    # │   └── bin/
+    # │
+    # └── release/
+    #     ├── include/
+    #     ├── lib/
+    #     └── bin/
+    #
     - name: Archive Platform Package
       shell: bash
       run: |
+        tree build/packages/x/xmake-project
+
         tar czf \
         xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}.tar.gz \
-        -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }}/release .
+        -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }} .
 
     - name: Upload Platform Package
       uses: actions/upload-artifact@v4
@@ -111,7 +132,7 @@ jobs:
     - name: Display Release Assets
       run: tree assets -a
 
-    - name: Create Release
-      uses: softprops/action-gh-release@v2
-      with:
-        files: assets/*.tar.gz
+    # - name: Create Release
+    #   uses: softprops/action-gh-release@v2
+    #   with:
+    #     files: assets/*.tar.gz
