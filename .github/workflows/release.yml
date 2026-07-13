@@ -97,7 +97,7 @@ jobs:
             suffix="-${{ matrix.runtime }}"
         fi
 
-        echo "archive_name=xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}${suffix}.tar.gz" >> $GITHUB_ENV
+        echo "archive-name=xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}${suffix}.tar.gz" >> $GITHUB_ENV
 
     # 将 xmake package 生成的二进制包转换为适用于不同平台的独立发布包，去除 xmake 的目录管理层。
     # 构建模式（debug/release）主要影响优化级别和调试信息，并不是二进制兼容性的唯一依据。Windows 下 MSVC Runtime（/MD、/MDd）会影响 CRT 链接方式，与用户工程的 ABI 兼容性直接相关，因此发布包根据 runtime 区分。
