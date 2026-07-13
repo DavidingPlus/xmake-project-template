@@ -85,7 +85,7 @@ target("xmake-project")
     end)
 
     before_package(function (target)
-        os.tryrm(target:packagedir())
+        os.tryrm(path.join(target:packagedir(), "$(plat)/$(arch)/$(mode)/"))
         os.mkdir(target:packagedir())
 
         os.cp("$(builddir)/$(plat)/$(arch)/$(mode)/.version", target:packagedir())

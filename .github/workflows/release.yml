@@ -98,7 +98,7 @@ jobs:
     #     ├── lib/
     #     └── bin/
     #
-    - name: Archive Platform Package
+    - name: Archive Platform Packages
       shell: bash
       run: |
         tree build/packages/x/xmake-project
@@ -107,7 +107,7 @@ jobs:
         xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}.tar.gz \
         -C build/packages/x/xmake-project/${{ matrix.plat }}/${{ matrix.xmake-arch }} .
 
-    - name: Upload Platform Package
+    - name: Upload Platform Packages
       uses: actions/upload-artifact@v4
       with:
         name: xmake-project-${{ github.ref_name }}-${{ matrix.plat }}-${{ matrix.xmake-arch }}
