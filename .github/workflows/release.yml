@@ -181,3 +181,13 @@ jobs:
       uses: softprops/action-gh-release@v2
       with:
         files: assets/*.tar.gz
+
+    - name: Trigger Update XMake Repo Workflow
+      uses: peter-evans/workflow-dispatch@v3
+      with:
+        workflow: update-xmake-repo.yml
+        token: ${{ secrets.GITHUB_TOKEN }}
+        inputs: |
+          {
+            "package": "${{ env.PACKAGE_NAME }}"
+          }
