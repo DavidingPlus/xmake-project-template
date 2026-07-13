@@ -6,6 +6,9 @@ on:
       package_name:
         required: true
         type: string
+      version:
+        required: true
+        type: string
 
 jobs:
   notify:
@@ -22,5 +25,5 @@ jobs:
           {
             "package": "${{ inputs.package_name }}",
             "repo": "${{ github.repository }}",
-            "version": "${{ github.event.release.tag_name }}"
+            "version": "${{ inputs.version }}"
           }

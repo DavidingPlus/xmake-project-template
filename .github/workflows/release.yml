@@ -193,5 +193,6 @@ jobs:
         token: ${{ secrets.XMAKE_REPO_TOKEN }}
         inputs: |
           {
-            "package_name": "${{ env.PACKAGE_NAME }}"
+            "package_name": "${{ env.PACKAGE_NAME }}",
+            "version": "${{ github.ref_name }}"
           }
