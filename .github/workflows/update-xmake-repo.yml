@@ -4,7 +4,13 @@ on:
   release:
     types:
       - published
-      - edited
+
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Release tag"
+        required: true
+        default: "v1.2.0"
 
 jobs:
   notify:
@@ -21,5 +27,5 @@ jobs:
           {
             "package": "xmake-project",
             "repo": "${{ github.repository }}",
-            "version": "${{ github.event.release.tag_name }}"
+            "version": "${{ github.event.release.tag_name || inputs.version }}"
           }
