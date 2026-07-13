@@ -183,7 +183,7 @@ jobs:
         files: assets/*.tar.gz
 
     - name: Trigger Update XMake Repo Workflow
-      uses: peter-evans/workflow-dispatch@v3
+      uses: benc-uk/workflow-dispatch@v1
       with:
         workflow: update-xmake-repo.yml
         token: ${{ secrets.GITHUB_TOKEN }}
