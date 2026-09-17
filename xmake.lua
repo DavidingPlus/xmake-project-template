@@ -1,7 +1,7 @@
 includes("config.lua")
 
 
-local version = "1.2.3"
+local version = "1.2.4"
 local export_headers_module = "export-headers"
 local export_headers_import_options = {rootdir = os.scriptdir(), anonymous = true}
 
