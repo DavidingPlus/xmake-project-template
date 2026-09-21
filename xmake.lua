@@ -65,7 +65,11 @@ target("xmake-project")
     apply_current_platform_target_config()
 
     if build_shared and is_current_win32() then
-        add_rules("utils.symbols.export_all")
+        -- D_BUILD_SHARED：使用动态库还是静态库。
+        add_defines("D_BUILD_SHARED", {public = true})
+
+        -- D_DLL_EXPORT：是否正在编译 DLL 本身。如果是，使用 __declspec(dllexport) 导出符号，否则是用户在使用 DLL 库，使用 __declspec(dllimport) 导入符号。
+        add_defines("D_DLL_EXPORT")
     end
 
     set_targetdir("$(builddir)/$(plat)/$(arch)/$(mode)/lib/")

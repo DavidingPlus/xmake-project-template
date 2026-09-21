@@ -7,13 +7,15 @@
  *
  */
 
-#ifndef _LTEST_H_
-#define _LTEST_H_
+#ifndef _XMAKE_PROJECT_LTEST_H_
+#define _XMAKE_PROJECT_LTEST_H_
+
+#include "globalmacros.h"
 
 #include <string>
 
 
-class LTest
+class D_API_EXPORTED LTest
 {
 
 public:
