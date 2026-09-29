@@ -5,6 +5,9 @@
 #include "ltest.h"
 
 
+using namespace xmake_project;
+
+
 TEST(TestClassTest, Test1)
 {
     EXPECT_EQ(LTest::foo(), std::string("hello world"));

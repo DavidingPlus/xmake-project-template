@@ -10,6 +10,9 @@
 #include "ltest.h"
 
 
+XMAKE_PROJECT_NAMESPACE_BEGIN(xmake_project)
+
+
 std::pair<int, int> LTest::gee(int first, int second) const
 {
     std::pair<int, int> res;
@@ -20,3 +23,6 @@ std::pair<int, int> LTest::gee(int first, int second) const
 
     return res;
 }
+
+
+XMAKE_PROJECT_NAMESPACE_END

@@ -15,7 +15,10 @@
 #include <string>
 
 
-class D_API_EXPORTED LTest
+XMAKE_PROJECT_NAMESPACE_BEGIN(xmake_project)
+
+
+class XMAKE_PROJECT_API_EXPORTED LTest
 {
 
 public:
@@ -24,6 +27,9 @@ public:
 
     std::pair<int, int> gee(int first, int second) const;
 };
+
+
+XMAKE_PROJECT_NAMESPACE_END
 
 
 #endif
